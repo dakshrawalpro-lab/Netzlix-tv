@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title>Hello, World!</title>
+</head>
+<body>
+  <h1>
+    Hello, World!
+  </h1>
+</body>
+</html><!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NETZLIX ELITE V31.0 - BY DAKSH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --accent: #E50914; --bg: #000; --gold: linear-gradient(45deg, #FFD700, #FFFACD, #FFA500, #FDB931, #8B6508); }
+        html { zoom: 0.8; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; user-select: none; }
+        
+        #ottLoader { position: fixed; inset: 0; background: #000; z-index: 999999; display: none; flex-direction: column; align-items: center; justify-content: center; transition: 0.5s; }
+        .loader-text { font-size: 60px; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: -2px; }
+        
+        .gold-shimmer { background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 3s linear infinite; background-size: 200% auto; font-weight: 900; }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        #ottOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px); z-index: 6000; display: none; align-items: center; justify-content: center; }
+        .ott-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 450px; }
+        .ott-card { background: #111; border-radius: 15px; border: 2px solid #222; overflow: hidden; transition: 0.3s; cursor: pointer; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; }
+        .ott-card img { width: 75%; height: 75%; object-fit: contain; }
+
+        .genre-bar { display: flex; overflow-x: auto; gap: 10px; padding: 15px; background: rgba(0,0,0,0.95); position: sticky; top: 0; z-index: 1000; scrollbar-width: none; border-bottom: 1px solid #222; }
+        .genre-item { cursor: pointer; font-size: 11px; text-transform: uppercase; white-space: nowrap; font-weight: 800; padding: 8px 18px; border-radius: 20px; border: 1px solid #333; transition: 0.3s; outline: none; }
+        .genre-item.active, .genre-item:focus { background: var(--accent); border-color: var(--accent); transform: scale(1.1); }
+        
+        .movie-card, .rank-box, button, input { transition: 0.2s; outline: none; }
+        .movie-card:focus, .rank-box:focus, button:focus { border: 3px solid #fff; transform: scale(1.05); z-index: 50; box-shadow: 0 0 20px var(--accent); }
+
+        .movie-card { width: 130px; flex-shrink: 0; border-radius: 8px; overflow: hidden; border: 1px solid #222; background: #111; position: relative; }
+        .movie-card img { aspect-ratio: 2/3; width: 100%; object-fit: cover; }
+        
+        .rank-box { position: relative; width: 150px; flex-shrink: 0; margin-left: 35px; border-radius: 8px; }
+        .rank-num { position: absolute; left: -40px; bottom: -10px; font-size: 110px; font-weight: 900; color: #000; -webkit-text-stroke: 2px #fff; z-index: 10; line-height: 1; }
+
+        .badge { position: absolute; font-size: 8px; padding: 2px 5px; border-radius: 3px; font-weight: 900; z-index: 20; text-transform: uppercase; }
+        .quality-badge { top: 5px; right: 5px; background: #008000; color: white; }
+        .imdb-badge { bottom: 5px; right: 5px; background: #f5c518; color: black; }
+        .duration-badge { top: 5px; left: 5px; background: #004dcf; color: white; }
+
+        .global-back-btn { position: fixed; top: 25px; left: 20px; z-index: 50000; background: var(--accent); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; visibility: hidden; border: 2px solid #fff; }
+
+        .row-container { position: relative; }
+        .scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.7); color: white; width: 40px; height: 60px; display: flex; align-items: center; justify-content: center; z-index: 100; cursor: pointer; opacity: 0; transition: 0.3s; border: 1px solid #333; }
+        .row-container:hover .scroll-arrow { opacity: 1; }
+        .arrow-left { left: 0; border-radius: 0 5px 5px 0; }
+        .arrow-right { right: 0; border-radius: 5px 0 0 5px; }
+        .scroll-arrow:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+    <div id="ottLoader">
+        <div id="loaderName" class="loader-text">NETZLIX</div>
+        <div class="gold-shimmer mt-2 text-sm uppercase tracking-widest">Made by Daksh</div>
+    </div>
+
+    <div id="masterBackBtn" class="global-back-btn" onclick="closeAllPanels()"><i class="fa fa-arrow-left text-white text-xl"></i></div>
+
+    <div id="ottOverlay" onclick="this.style.display='none'">
+        <div class="ott-grid" onclick="event.stopPropagation()">
+            <div class="ott-card" tabindex="0" onclick="switchOTT('netflix', '#E50914', 'NETFLIX')"><img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"></div>
+            <div class="ott-card" tabindex="0" onclick="switchOTT('prime', '#00A8E1', 'PRIME VIDEO')"><img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Amazon_Prime_Video_logo.svg"></div>
+            <div class="ott-card" tabindex="0" onclick="switchOTT('disney', '#006E99', 'DISNEY+')"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Disney%2B_logo.svg"></div>
+            <div class="ott-card" tabindex="0" onclick="switchOTT('crunchy', '#F47521', 'CRUNCHYROLL')"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ0G4F6TlUoG7FxaZklIvljQo24qJwLvZwf0Rv0d9VfA&s=10"></div>
+            <div class="ott-card" tabindex="0" onclick="switchOTT('zee5', '#8230C6', 'ZEE5')"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkRvC4p8HVVbzQH2fI_Suyu-NwZXIdtyxTBPhHdE7r6pWXljGfc9mldESr&s=10"></div>
+            <div class="ott-card" tabindex="0" onclick="switchOTT('apple', '#FFFFFF', 'APPLE TV+')"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHxXaem41qmnemUPkCcLZcETqWKsmwCJhtbowXR248ww&s"></div>
+        </div>
+    </div>
+
+    <div id="app">
+        <header class="sticky top-0 z-[5000] bg-black/95 p-4 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span id="brandName" class="font-black italic text-3xl tracking-tighter" style="color: var(--accent)">NETZLIX</span>
+                    <p class="gold-shimmer text-[8px] uppercase tracking-widest">Made by Daksh</p>
+                </div>
+                <div class="flex gap-4 items-center">
+                    <i class="fa fa-th-large text-2xl text-zinc-400 cursor-pointer" onclick="document.getElementById('ottOverlay').style.display='flex'" tabindex="0"></i>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" class="w-8 h-8 rounded border-2 border-red-600">
+                </div>
+            </div>
+            <input type="text" id="liveSearchInput" oninput="doLiveSearch()" placeholder="Search from 80+ Genres..." class="w-full bg-zinc-900 rounded-lg py-3 px-4 text-sm text-white outline-none border border-transparent focus:border-red-600">
+        </header>
+
+        <div id="heroBanner" class="h-[60vh] relative flex items-end p-8 bg-cover bg-center transition-all duration-1000">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+            <div class="relative z-10 w-full">
+                <h2 id="bannerTitle" class="text-4xl font-black italic uppercase mb-6 leading-tight"></h2>
+                <div class="flex gap-3">
+                    <button id="mainPlayBtn" class="bg-white text-black px-10 py-3 rounded font-black text-lg">▶ WATCH</button>
+                    <button id="mainInfoBtn" class="bg-zinc-800/80 text-white px-8 py-3 rounded font-black text-lg backdrop-blur-md">ⓘ INFO</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="genre-bar" id="genreList"></div>
+        <div id="mainContent" class="space-y-10 pb-10 mt-6"></div>
+        
+        <center>
+            <div id="scrollDownIndicator" class="text-zinc-500 animate-bounce cursor-pointer py-4" onclick="window.scrollBy(0, 400)">
+                <i class="fa fa-chevron-down text-2xl"></i>
+            </div>
+            <button id="loadMoreBtn" onclick="increaseLimit()" class="hidden bg-red-600 text-white px-10 py-4 rounded-full font-black text-sm mb-10">LOAD MORE CONTENT</button>
+        </center>
+
+        <footer id="dynamicFooter" class="bg-black border-t border-zinc-900 p-12 text-center"></footer>
+    </div>
+
+    <div id="infoPanel" class="fixed inset-0 bg-black z-[10000] hidden overflow-y-auto pb-10">
+        <div class="relative h-[45vh]"><img id="infoBannerImg" class="w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div></div>
+        <div class="p-6 -mt-10 relative z-10">
+            <div class="flex justify-between items-start mb-4">
+                <h2 id="pTitle" class="text-4xl font-black italic uppercase leading-none"></h2>
+                <button onclick="toggleFav()" class="text-3xl text-zinc-400" id="favHeart"><i class="fa fa-heart"></i></button>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-6 text-[10px] font-bold">
+                <span id="pYear" class="text-white opacity-60"></span>
+                <span id="pRating" class="border border-zinc-600 px-2 rounded text-zinc-400"></span>
+                <span id="pQuality" class="text-green-500"></span>
+                <span id="pDuration" class="text-blue-400"></span>
+                <span id="pLang" class="text-yellow-500"></span>
+            </div>
+            <button id="playBtn" class="w-full bg-white text-black py-4 rounded font-black text-xl uppercase mb-6">WATCH NOW</button>
+            <div class="space-y-4">
+                <p id="pDesc" class="text-zinc-300 text-sm leading-relaxed"></p>
+                <div class="text-[10px] uppercase tracking-widest text-zinc-500">
+                    <p>Cast: <span id="pCast" class="text-zinc-300"></span></p>
+                    <p>Director: <span id="pDirector" class="text-zinc-300"></span></p>
+                    <p>IMDb: <span id="pImdb" class="text-yellow-500 font-bold"></span></p>
+                </div>
+            </div>
+            <div id="moreLikeThis" class="grid grid-cols-3 gap-3 mt-10"></div>
+        </div>
+    </div>
+    <script>
+        const ottConfigs = {
+            netflix: '17xeiQGg_k8u-O50NA2dceMXATAkV0Qc8X6y4BTOyYdc',
+            prime: '1uBJmCFVlWkNCu8KAg5-wzi_dKs67e3SrTSYqvMsb3IU',
+            zee5: '17Fxjdvi8Hao8oy4qOiQiCg9ebXRA4OBb2KiRwTcml84',
+            crunchy: '1i3thy-hRD_WFsJmfNDDSKg1PFQ3gluSBVBRGJ2TTryc',
+            disney: '1wE0OHzpIBVBu2VsqNGzyeMCxoiL6iCDbrsvxoBccDxM',
+            apple: '1skE6N4bvQLbqr7LEKEYIWGMKhME97uUmxRWk4OjCteo'
+        };
+
+        let currentSheetId = ottConfigs.netflix;
+        let movies = [], favorites = JSON.parse(localStorage.getItem('favs')) || [];
+        let continueWatching = JSON.parse(localStorage.getItem('cw')) || [];
+        let displayLimit = 30, currentTag = 'Home', currentMovie = null;
+
+        const genreMaster = ["Home", "Favorites", "Movies", "TV Shows", "Action", "Adventure", "Anime", "Animation", "Biography", "Comedy", "Crime", "Documentary", "Drama", "Family", "Fantasy", "History", "Horror", "Music", "Mystery", "Romance", "Sci-Fi", "Sport", "Thriller", "Hindi", "English", "Dubbed", "Marvel", "DC", "South Indian", "Korean Drama", "Web Series", "Trending", "New Release", "Classic", "Supernatural", "Vampire", "Zombie", "Martial Arts", "Cyberpunk", "Space", "Time Travel", "Survival", "Heist", "Police", "Medical", "Political", "Teen", "Adult", "Kids", "Originals", "Short Film", "Indie", "Slasher", "Gore", "Cult", "Epic", "Spy", "Assassin", "Dark Comedy", "Post-Apocalyptic", "Monster", "Alien"];
+
+        window.onload = () => { triggerOTTAnimation('NETZLIX', '#E50914'); initRemoteSupport(); };
+
+        function triggerOTTAnimation(name, color) {
+            const loader = document.getElementById('ottLoader');
+            const lName = document.getElementById('loaderName');
+            lName.innerText = name;
+            lName.style.color = color;
+            lName.style.textShadow = `0 0 40px ${color}`;
+            loader.style.display = 'flex';
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; loader.style.opacity = '1'; }, 500);
+                loadData();
+            }, 2500);
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch(`https://docs.google.com/spreadsheets/d/${currentSheetId}/export?format=csv&gid=0&t=${Date.now()}`);
+                const csv = await res.text();
+                movies = csv.split(/\r?\n/).slice(1).map(r => {
+                    const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    const cl = (s) => s ? s.replace(/^"|"$/g, '').trim() : "";
+                    return {
+                        title: cl(c[0]), poster: cl(c[1]), watch: cl(c[2]), genres: cl(c[3])?.toLowerCase() || "",
+                        rank: parseInt(cl(c[4])) || 99, banner: cl(c[5]) || cl(c[1]), desc: cl(c[6]) || 'Premium HD Content.',
+                        quality: cl(c[7]) || 'HD', type: cl(c[8])?.toLowerCase() || 'movie',
+                        imdb: cl(c[9]) || '8.2', cast: cl(c[10]) || 'Top Stars', duration: cl(c[11]) || '2h',
+                        director: cl(c[12]) || 'Daksh', year: cl(c[13]) || '2026', rating: cl(c[14]) || 'TV-MA', lang: cl(c[15]) || 'Hindi'
+                    };
+                }).filter(m => m.title);
+                updateFooter();
+                renderUI('Home');
+                startBannerRotation();
+            } catch(e) { console.error(e); }
+        }
+
+        function switchOTT(key, color, name) {
+            currentSheetId = ottConfigs[key];
+            document.documentElement.style.setProperty('--accent', color);
+            document.getElementById('brandName').innerText = name;
+            document.getElementById('ottOverlay').style.display = 'none';
+            triggerOTTAnimation(name, color);
+        }
+
+        function renderUI(tag) {
+            currentTag = tag;
+            const box = document.getElementById('mainContent'); box.innerHTML = "";
+            document.getElementById('masterBackBtn').style.visibility = (tag === 'Home') ? 'hidden' : 'visible';
+            document.getElementById('genreList').innerHTML = genreMaster.map(g => `<div tabindex="0" onclick="renderUI('${g}')" class="genre-item ${tag===g?'active':''}">${g}</div>`).join('');
+
+            if(tag === 'Home') {
+                document.getElementById('heroBanner').style.display = 'flex';
+                document.getElementById('loadMoreBtn').style.display = 'none';
+                const tMovies = movies.filter(m => m.type.includes('movie')).sort((a,b) => a.rank - b.rank).slice(0,10);
+                const tShows = movies.filter(m => m.type.includes('tv') || m.type.includes('series')).sort((a,b) => a.rank - b.rank).slice(0,10);
+                box.innerHTML += createRankRow("Top 10 Movies Today", tMovies);
+                box.innerHTML += createRankRow("Top 10 TV Shows Today", tShows);
+                if(continueWatching.length > 0) box.innerHTML += createRow("Continue Watching", continueWatching);
+                genreMaster.slice(4, 20).forEach(g => {
+                    const filtered = movies.filter(m => m.genres.includes(g.toLowerCase())).slice(0,10);
+                    if(filtered.length > 0) box.innerHTML += createRow(g + " Hits", filtered);
+                });
+            } else {
+                document.getElementById('loadMoreBtn').style.display = 'block';
+                filterAndDisplay();
+            }
+        }
+
+        function createCard(m) {
+            return `<div tabindex="0" onclick="openInfo('${m.title.replace(/'/g, "\\'")}')" class="movie-card">
+                <div class="badge duration-badge">${m.duration}</div>
+                <div class="badge quality-badge">${m.quality}</div>
+                <div class="badge imdb-badge">★ ${m.imdb}</div>
+                <img src="${m.poster}" loading="lazy">
+            </div>`;
+        }
+
+        function createRankRow(t, d) {
+            const id = 'row-' + Math.random().toString(36).substr(2, 9);
+            return `<div class="row-container">
+            <h3 class="px-6 font-bold text-zinc-500 text-[10px] uppercase mb-4 italic tracking-widest">${t}</h3>
+            <div class="scroll-arrow arrow-left" onclick="scrollRow('${id}', -500)"><i class="fa fa-chevron-left"></i></div>
+            <div id="${id}" class="flex overflow-x-auto gap-12 px-12 scrollbar-hide scroll-smooth">
+                ${d.map((m,i) => `<div tabindex="0" onclick="openInfo('${m.title.replace(/'/g, "\\'")}')" class="rank-box"><span class="rank-num">${i+1}</span><img src="${m.poster}" class="w-full aspect-[2/3] object-cover rounded shadow-2xl relative z-20"></div>`).join('')}
+            </div>
+            <div class="scroll-arrow arrow-right" onclick="scrollRow('${id}', 500)"><i class="fa fa-chevron-right"></i></div>
+            </div>`;
+        }
+
+        function createRow(t, d) {
+            const id = 'row-' + Math.random().toString(36).substr(2, 9);
+            return `<div class="row-container">
+            <h3 class="px-6 font-bold text-zinc-500 text-[10px] uppercase mb-2 italic tracking-widest">${t}</h3>
+            <div class="scroll-arrow arrow-left" onclick="scrollRow('${id}', -500)"><i class="fa fa-chevron-left"></i></div>
+            <div id="${id}" class="flex overflow-x-auto gap-3 px-6 scrollbar-hide scroll-smooth">${d.map(m => createCard(m)).join('')}</div>
+            <div class="scroll-arrow arrow-right" onclick="scrollRow('${id}', 500)"><i class="fa fa-chevron-right"></i></div>
+            </div>`;
+        }
+
+        function scrollRow(id, dist) { document.getElementById(id).scrollBy({ left: dist, behavior: 'smooth' }); }
+
+        function filterAndDisplay() {
+            document.getElementById('heroBanner').style.display = 'none';
+            let f = [];
+            
+            // Logic for Favorites and Type/Genre filtering
+            if(currentTag === 'Favorites') {
+                f = favorites;
+            } else if(currentTag === 'Movies') {
+                f = movies.filter(m => m.type.includes('movie'));
+            } else if(currentTag === 'TV Shows') {
+                f = movies.filter(m => m.type.includes('tv') || m.type.includes('series') || m.type.includes('show'));
+            } else {
+                f = movies.filter(m => m.genres.includes(currentTag.toLowerCase()) || m.lang.toLowerCase().includes(currentTag.toLowerCase()));
+            }
+
+            if(f.length === 0) {
+                document.getElementById('mainContent').innerHTML = `<div class="text-center py-20 text-zinc-500 uppercase font-black">No Content Found in ${currentTag}</div>`;
+            } else {
+                document.getElementById('mainContent').innerHTML = `<div class="grid grid-cols-3 gap-3 p-4">${f.slice(0, displayLimit).map(m => createCard(m)).join('')}</div>`;
+            }
+        }
+
+        function openInfo(t) {
+            const m = movies.find(x => x.title === t) || favorites.find(x => x.title === t) || continueWatching.find(x => x.title === t);
+            if(!m) return; currentMovie = m;
+            document.getElementById('pTitle').innerText = m.title;
+            document.getElementById('pDesc').innerText = m.desc;
+            document.getElementById('pImdb').innerText = m.imdb;
+            document.getElementById('pYear').innerText = m.year;
+            document.getElementById('pQuality').innerText = m.quality;
+            document.getElementById('pDuration').innerText = m.duration;
+            document.getElementById('pLang').innerText = m.lang;
+            document.getElementById('pCast').innerText = m.cast;
+            document.getElementById('pDirector').innerText = m.director;
+            document.getElementById('pRating').innerText = m.rating;
+            document.getElementById('infoBannerImg').src = m.banner;
+            document.getElementById('favHeart').style.color = favorites.some(f => f.title === m.title) ? '#E50914' : '#52525b';
+            document.getElementById('playBtn').onclick = () => { addToCW(m); window.open(m.watch, '_blank'); };
+            document.getElementById('infoPanel').style.display = 'block';
+            document.getElementById('masterBackBtn').style.visibility = 'visible';
+            const recs = movies.filter(x => x.genres.includes(m.genres.split(' ')[0])).slice(0,6);
+            document.getElementById('moreLikeThis').innerHTML = recs.map(r => createCard(r)).join('');
+            document.getElementById('playBtn').focus();
+        }
+
+        function toggleFav() {
+            const idx = favorites.findIndex(f => f.title === currentMovie.title);
+            if(idx > -1) {
+                favorites.splice(idx, 1);
+            } else {
+                favorites.push(currentMovie);
+            }
+            localStorage.setItem('favs', JSON.stringify(favorites));
+            document.getElementById('favHeart').style.color = idx > -1 ? '#52525b' : '#E50914';
+            // Update UI if we are in Favorites tab
+            if(currentTag === 'Favorites') filterAndDisplay();
+        }
+
+        function addToCW(m) {
+            continueWatching = continueWatching.filter(x => x.title !== m.title);
+            continueWatching.unshift(m);
+            if(continueWatching.length > 10) continueWatching.pop();
+            localStorage.setItem('cw', JSON.stringify(continueWatching));
+        }
+
+        function startBannerRotation() {
+            setInterval(() => {
+                if(currentTag === 'Home' && document.getElementById('infoPanel').style.display === 'none') {
+                    const m = movies[Math.floor(Math.random() * movies.length)];
+                    if(m) {
+                        document.getElementById('heroBanner').style.backgroundImage = `url('${m.banner}')`;
+                        document.getElementById('bannerTitle').innerText = m.title;
+                        document.getElementById('mainPlayBtn').onclick = () => { addToCW(m); window.open(m.watch, '_blank'); };
+                        document.getElementById('mainInfoBtn').onclick = () => openInfo(m.title);
+                    }
+                }
+            }, 30000); 
+        }
+
+        function updateFooter() {
+            const name = document.getElementById('brandName').innerText;
+            document.getElementById('dynamicFooter').innerHTML = `
+                <div class="gold-shimmer text-3xl mb-4 italic">${name} ELITE V31.0</div>
+                <p class="text-white font-black text-sm tracking-[3px] uppercase mb-4">Website Made by Daksh</p>
+                <div class="text-zinc-500 text-[10px] space-y-2 uppercase">
+                    <p>© ALL RIGHTS RESERVED BY ${name} 2026</p>
+                    <p>DISCLAIMER: WE DO NOT HOST CONTENT. WE PROVIDE EXTERNAL LINKS ONLY.</p>
+                    <p>EMAIL: NETZLIXWEBPAGEE@GMAIL.COM</p>
+                </div>`;
+        }
+
+        function closeAllPanels() {
+            document.getElementById('infoPanel').style.display = 'none';
+            if(currentTag === 'Home') document.getElementById('masterBackBtn').style.visibility = 'hidden';
+            else renderUI('Home');
+        }
+
+        function increaseLimit() { displayLimit += 30; filterAndDisplay(); }
+
+        function doLiveSearch() {
+            const q = document.getElementById('liveSearchInput').value.toLowerCase();
+            if(!q) { renderUI('Home'); return; }
+            const r = movies.filter(m => m.title.toLowerCase().includes(q) || m.genres.includes(q));
+            document.getElementById('heroBanner').style.display = 'none';
+            document.getElementById('mainContent').innerHTML = `<div class="grid grid-cols-3 gap-3 p-4">${r.map(m => createCard(m)).join('')}</div>`;
+        }
+
+        function initRemoteSupport() {
+            document.addEventListener('keydown', (e) => {
+                const focusable = Array.from(document.querySelectorAll('[tabindex="0"], input, button'));
+                let index = focusable.indexOf(document.activeElement);
+                if (e.key === 'ArrowRight') {
+                    if (index < focusable.length - 1) focusable[index + 1].focus();
+                    if (document.activeElement.parentElement.classList.contains('scrollbar-hide')) {
+                        document.activeElement.parentElement.scrollBy(200, 0);
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    if (index > 0) focusable[index - 1].focus();
+                    if (document.activeElement.parentElement.classList.contains('scrollbar-hide')) {
+                        document.activeElement.parentElement.scrollBy(-200, 0);
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    window.scrollBy(0, 200);
+                    if (index + 5 < focusable.length) focusable[index + 5].focus();
+                } else if (e.key === 'ArrowUp') {
+                    window.scrollBy(0, -200);
+                    if (index - 5 >= 0) focusable[index - 5].focus();
+                } else if (e.key === 'Enter') {
+                    document.activeElement.click();
+                } else if (e.key === 'Backspace' || e.key === 'Escape') {
+                    closeAllPanels();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

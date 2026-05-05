@@ -27,7 +27,21 @@
         :root { --accent: #E50914; --bg: #000; --gold: linear-gradient(45deg, #FFD700, #FFFACD, #FFA500, #FDB931, #8B6508); }
         html { zoom: 0.7; }
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; margin: 0; user-select: none; transition: background 0.3s, color 0.3s; padding-left: 80px; }
-        
+                /* PC HOVER & TV FOCUS */
+        .movie-card:hover, .rank-box:hover, .ott-card:hover, .genre-item:hover {
+            transform: scale(1.1) !important;
+            border: 3px solid #E50914 !important;
+            z-index: 100;
+            transition: 0.3s ease;
+        }
+        [tabindex="0"]:focus {
+            outline: none !important;
+            transform: scale(1.15) !important;
+            border: 4px solid #ffffff !important;
+            box-shadow: 0 0 30px rgba(255,255,255,0.8);
+            z-index: 1000;
+        }
+
         /* SIDE NAVIGATION BAR */
         .side-nav { position: fixed; left: 0; top: 0; height: 100vh; width: 80px; background: rgba(0,0,0,0.9); border-right: 1px solid #222; display: flex; flex-direction: column; align-items: center; padding: 30px 0; z-index: 10000; transition: 0.3s; }
         .nav-item { margin-bottom: 35px; color: #666; cursor: pointer; transition: 0.3s; font-size: 24px; position: relative; }
@@ -459,6 +473,70 @@
             }
             initTVNavigation();
         };
+// Naya Smooth Navigation Logic (Purane ki tension mat lo, ye kaam karega)
+function initTVNavigation() {
+    document.removeEventListener('keydown', arguments.callee); // Purane logic ko block karne ke liye
+    document.addEventListener('keydown', (e) => {
+        const focusable = Array.from(document.querySelectorAll('[tabindex="0"], input, select, button, textarea'))
+                              .filter(el => el.offsetParent !== null);
+        
+        const current = document.activeElement;
+        const index = focusable.indexOf(current);
+
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            e.preventDefault();
+            
+            if (index === -1) {
+                if(focusable.length > 0) focusable[0].focus();
+                return;
+            }
+
+            const currentRect = current.getBoundingClientRect();
+            let bestElement = null;
+            let minDistance = Infinity;
+
+            focusable.forEach(el => {
+                if (el === current) return;
+                const rect = el.getBoundingClientRect();
+                
+                let isCorrectDirection = false;
+                if (e.key === 'ArrowRight' && rect.left >= (currentRect.right - 10)) isCorrectDirection = true;
+                if (e.key === 'ArrowLeft' && rect.right <= (currentRect.left + 10)) isCorrectDirection = true;
+                if (e.key === 'ArrowDown' && rect.top >= (currentRect.bottom - 10)) isCorrectDirection = true;
+                if (e.key === 'ArrowUp' && rect.bottom <= (currentRect.top + 10)) isCorrectDirection = true;
+
+                if (isCorrectDirection) {
+                    const distance = Math.sqrt(
+                        Math.pow(rect.left - currentRect.left, 2) + 
+                        Math.pow(rect.top - currentRect.top, 2)
+                    );
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        bestElement = el;
+                    }
+                }
+            });
+
+            if (bestElement) {
+                bestElement.focus();
+                bestElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        } 
+        else if (e.key === 'Enter') {
+            if (current && current.click) current.click();
+        }
+        else if (e.key === 'Escape' || e.key === 'Backspace') {
+            if (document.getElementById('infoPanel').style.display === 'block') {
+                closeAllPanels();
+            }
+        }
+    });
+
+    document.addEventListener('mousedown', (e) => {
+        const target = e.target.closest('[tabindex="0"]');
+        if (target) target.focus();
+    });
+}
 
         function showHomeSkeletons() {
             const box = document.getElementById('mainContent');

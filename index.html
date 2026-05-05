@@ -11,6 +11,17 @@
   </h1>
 </body>
 </html><!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <title></title>
+</head>
+<body>
+  <h1>
+    
+  </h1>
+</body>
+</html><!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -42,8 +53,8 @@
             z-index: 1000;
         }
 
-        /* SIDE NAVIGATION BAR */
-        .side-nav { position: fixed; left: 0; top: 0; height: 100vh; width: 80px; background: rgba(0,0,0,0.9); border-right: 1px solid #222; display: flex; flex-direction: column; align-items: center; padding: 30px 0; z-index: 10000; transition: 0.3s; }
+        /* SIDE NAVIGATION BAR - UPDATED DISPLAY TO NONE BY DEFAULT */
+        .side-nav { position: fixed; left: 0; top: 0; height: 100vh; width: 80px; background: rgba(0,0,0,0.9); border-right: 1px solid #222; display: none; flex-direction: column; align-items: center; padding: 30px 0; z-index: 10000; transition: 0.3s; }
         .nav-item { margin-bottom: 35px; color: #666; cursor: pointer; transition: 0.3s; font-size: 24px; position: relative; }
         .nav-item:hover, .nav-item.active { color: var(--accent); transform: scale(1.2); }
         .nav-item .tooltip { position: absolute; left: 100%; top: 50%; transform: translateY(-50%); background: var(--accent); color: white; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 800; display: none; margin-left: 15px; white-space: nowrap; }
@@ -115,9 +126,7 @@
         /* Filter Controls */
         .filter-controls { display: flex; gap: 10px; padding: 0 16px 10px; }
         .filter-select { background: #111; border: 1px solid #333; color: white; font-size: 12px; padding: 5px 10px; border-radius: 5px; outline: none; }
-        body.light-mode .filter-select { background: #f0f0f0; border-color: #ddd; color: #000; }
-        
-        /* Video Trailer Styling */
+        body.light-mode .filter-select { background: #f0f0f0; border-color: #ddd; color: #000; }/* Video Trailer Styling */
         #trailerPlayer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; display: none; }
 
         /* Search History Styles */
@@ -148,7 +157,7 @@
 </head>
 <body>
     
-    <nav class="side-nav">
+    <nav id="sideNavBar" class="side-nav">
         <div class="nav-item mb-10">
             <img id="sideNavAvatar" src="" class="w-12 h-12 rounded border-2 border-red-600" onclick="location.reload()">
         </div>
@@ -173,7 +182,6 @@
             <span class="tooltip">CHANGE OTT</span>
         </div>
     </nav>
-
     <div id="genreOverlay" onclick="this.style.display='none'">
         <h2 class="text-4xl font-black italic mb-10 text-center gold-shimmer uppercase">Select Your Mood</h2>
         <div class="genre-grid" onclick="event.stopPropagation()">
@@ -192,8 +200,7 @@
                 <img tabindex="0" src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" class="avatar-option selected" onclick="selectAvatar(this)">
                 <img tabindex="0" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/e70b1333850498.56ba69ac32ae3.png" class="avatar-option" onclick="selectAvatar(this)">
                 <img tabindex="0" src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/1bdc9a33850498.56ba69ac2ba5b.png" class="avatar-option" onclick="selectAvatar(this)">
-            </div>
-            <button tabindex="0" onclick="saveUser()" class="w-full bg-red-600 py-4 rounded font-black text-lg shadow-lg text-white">NEXT STEP</button>
+            </div><button tabindex="0" onclick="saveUser()" class="w-full bg-red-600 py-4 rounded font-black text-lg shadow-lg text-white">NEXT STEP</button>
             <button tabindex="0" onclick="showProfileScreen()" class="w-full mt-4 text-zinc-400 text-sm font-bold uppercase">View Existing Profiles</button>
         </div>
     </div><div id="profileScreen" style="display:none">
@@ -266,9 +273,7 @@
                         <option value="Low">IMDb Low to High</option>
                     </select>
                 </div>
-            </header>
-
-            <div class="ad-container">
+            </header><div class="ad-container">
                 <script type="text/javascript">
                     atOptions = { 'key' : 'b659c87530564cdc317e3545c7d8c831', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
                 </script>
@@ -343,8 +348,7 @@
                             <i tabindex="0" class="fa fa-star" onclick="setRating(3)"></i>
                             <i tabindex="0" class="fa fa-star" onclick="setRating(4)"></i>
                             <i tabindex="0" class="fa fa-star" onclick="setRating(5)"></i>
-                        </div>
-                        <textarea tabindex="0" id="reviewComment" placeholder="Write your thoughts..." class="w-full bg-zinc-800 p-4 rounded-lg outline-none text-sm text-white border border-transparent focus:border-red-600 mb-4 h-24"></textarea>
+                        </div><textarea tabindex="0" id="reviewComment" placeholder="Write your thoughts..." class="w-full bg-zinc-800 p-4 rounded-lg outline-none text-sm text-white border border-transparent focus:border-red-600 mb-4 h-24"></textarea>
                         <button tabindex="0" onclick="submitReview()" class="bg-red-600 text-white px-8 py-3 rounded font-black text-xs uppercase">Submit Review</button>
                     </div>
                     <div id="reviewsList" class="space-y-4"></div>
@@ -354,7 +358,6 @@
             </div>
         </div>
     </div>
-
     <script>let avatarSrc = localStorage.getItem('uAvatar') || "https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png";
         
         function selectAvatar(el) {
@@ -382,6 +385,8 @@
         function showProfileScreen() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('profileScreen').style.display = 'flex';
+            // Hide side nav while selecting profile
+            document.getElementById('sideNavBar').style.display = 'none';
             
             const wrapper = document.getElementById('profilesWrapper');
             let profiles = JSON.parse(localStorage.getItem('netzlixProfiles')) || [];
@@ -419,6 +424,10 @@
                 document.getElementById('sideNavAvatar').src = selectedUser.avatar;
                 document.getElementById('profileScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
+                
+                // SHOW SIDE NAV ONLY AFTER SUCCESSFUL LOGIN
+                document.getElementById('sideNavBar').style.display = 'flex';
+                
                 triggerOTTAnimation('NETZLIX', '#E50914');
             } else alert("गलत पासवर्ड!");
         }
@@ -463,9 +472,7 @@
         let userReviews = JSON.parse(localStorage.getItem('userReviews')) || {};
         let displayLimit = 30, currentTag = 'Home', currentMovie = null, currentRating = 0;
 
-        const genreMaster = ["Home", "Favorites", "Movies", "TV Shows", "Action", "Adventure", "Anime", "Comedy", "Horror", "Sci-Fi", "Thriller", "Hindi", "English", "Dubbed", "Marvel", "DC", "South Indian", "Korean Drama", "Web Series", "Trending", "New Release", "Classic", "Supernatural", "Vampire", "Zombie", "Martial Arts", "Cyberpunk", "Space", "Time Travel", "Survival", "Heist", "Police", "Medical", "Political", "Teen", "Adult", "Kids", "Originals", "Short Film", "Indie", "Slasher", "Gore", "Cult", "Epic", "Spy", "Assassin", "Dark Comedy", "Post-Apocalyptic", "Monster", "Alien", "Mythological", "War", "Historical", "Western", "Musical", "Dance", "Sports", "Racing", "Gambling", "Prison", "Revenge", "Superhero", "Magic", "Isekai", "Slice of Life", "Mecha", "Psychological", "Mystery", "Romance", "Family", "Documentary", "Biography", "Noir", "Neo-Noir", "Steampunk", "Folklore", "Disaster", "Parody", "Satire", "Found Footage", "Experimental", "Silent", "Reality TV", "Science Fiction", "Game Show"];
-
-        window.onload = () => { 
+        const genreMaster = ["Home", "Favorites", "Movies", "TV Shows", "Action", "Adventure", "Anime", "Comedy", "Horror", "Sci-Fi", "Thriller", "Hindi", "English", "Dubbed", "Marvel", "DC", "South Indian", "Korean Drama", "Web Series", "Trending", "New Release", "Classic", "Supernatural", "Vampire", "Zombie", "Martial Arts", "Cyberpunk", "Space", "Time Travel", "Survival", "Heist", "Police", "Medical", "Political", "Teen", "Adult", "Kids", "Originals", "Short Film", "Indie", "Slasher", "Gore", "Cult", "Epic", "Spy", "Assassin", "Dark Comedy", "Post-Apocalyptic", "Monster", "Alien", "Mythological", "War", "Historical", "Western", "Musical", "Dance", "Sports", "Racing", "Gambling", "Prison", "Revenge", "Superhero", "Magic", "Isekai", "Slice of Life", "Mecha", "Psychological", "Mystery", "Romance", "Family", "Documentary", "Biography", "Noir", "Neo-Noir", "Steampunk", "Folklore", "Disaster", "Parody", "Satire", "Found Footage", "Experimental", "Silent", "Reality TV", "Science Fiction", "Game Show"];window.onload = () => { 
             if(localStorage.getItem('netzlixProfiles') || localStorage.getItem('uName')) showProfileScreen();
             if(localStorage.getItem('theme') === 'light') {
                 document.body.classList.add('light-mode');
@@ -574,17 +581,13 @@ function initTVNavigation() {
                 }).filter(m => m.title);
                 updateFooter(); renderUI('Home'); startBannerRotation();
             } catch(e) { console.error("Error loading data:", e); }
-        }
-
-        function switchOTT(key, color, name) {
+        }function switchOTT(key, color, name) {
             currentSheetId = ottConfigs[key];
             document.documentElement.style.setProperty('--accent', color);
             document.getElementById('brandName').innerText = name;
             document.getElementById('ottOverlay').style.display = 'none';
             triggerOTTAnimation(name, color);
-        }
-
-        function applyFilters() {
+        }function applyFilters() {
             const year = document.getElementById('yearFilter').value;
             const sort = document.getElementById('ratingSort').value;
             let filtered = [...movies];
@@ -685,9 +688,7 @@ function initTVNavigation() {
             const recs = movies.filter(x => x.genres.includes(m.genres.split(' ')[0])).slice(0,6);
             document.getElementById('moreLikeThis').innerHTML = recs.map(r => createCard(r)).join('');
             setTimeout(() => document.getElementById('playBtn').focus(), 300);
-        }
-
-        function playCurrentTrailer() { if(currentMovie && currentMovie.trailer) { closeAllPanels(); playTrailer(currentMovie.trailer); } }
+        }function playCurrentTrailer() { if(currentMovie && currentMovie.trailer) { closeAllPanels(); playTrailer(currentMovie.trailer); } }
         function playTrailer(url) { player = document.getElementById('trailerPlayer'); player.src = url; player.style.display = 'block'; player.play().catch(e => console.log("Auto-play blocked")); }
         function stopTrailer() { player = document.getElementById('trailerPlayer'); player.pause(); player.src = ""; player.style.display = 'none'; }
 
@@ -778,7 +779,7 @@ function initTVNavigation() {
             localStorage.setItem('userReviews', JSON.stringify(userReviews));
             document.getElementById('reviewComment').value = ""; setRating(0); renderReviews(); showToast("Review Posted Successfully!");
         }function renderReviews() {
-            list = document.getElementById('reviewsList'); reviews = userReviews[currentMovie.title] || [];
+            list =document.getElementById('reviewsList'); reviews = userReviews[currentMovie.title] || [];
             if (reviews.length === 0) { list.innerHTML = `<p class="text-zinc-600 text-sm italic">No reviews yet. Be the first to review!</p>`; return; }
             list.innerHTML = reviews.map(r => `
                 <div class="review-card">
